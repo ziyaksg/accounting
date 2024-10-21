@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @MappedSuperclass
-//@EntityListeners(BaseEntityListener.class)
+@EntityListeners(BaseEntityListener.class)
 public abstract class BaseEntity implements Serializable {
 
     @Id
@@ -34,4 +34,12 @@ public abstract class BaseEntity implements Serializable {
     public Long lastUpdateUserId;
 
     public Boolean isDeleted = false;
+
+    public void setLastUpdateDateTime(LocalDateTime lastUpdateDateTime) {
+        this.lastUpdateDateTime = lastUpdateDateTime;
+    }
+
+    public void setLastUpdateUserId(Long lastUpdateUserId) {
+        this.lastUpdateUserId = lastUpdateUserId;
+    }
 }
