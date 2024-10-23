@@ -1,10 +1,8 @@
 package com.uydev.controller;
 
 import com.uydev.dto.CompanyDTO;
-import com.uydev.entity.Company;
 import com.uydev.services.CompanyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -12,14 +10,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@RequiredArgsConstructor
 @RequestMapping("/companies")
 public class CompanyController {
 
     private final CompanyService companyService;
-
-    public CompanyController(CompanyService companyService) {
-        this.companyService = companyService;
-    }
 
     @GetMapping("/list")
     public String companyList(Model model){
@@ -38,9 +33,35 @@ public class CompanyController {
         return "/company/company-update";
     }
 
-    @PostMapping("/update/{companyId}")
+    @PostMapping("/update/{id}")
     public String companyUpdateSave(@ModelAttribute("company") CompanyDTO companyDto){
+
         companyService.updateCompany(companyDto);
+        return "redirect:/companies/list";
+    }
+
+    @GetMapping("/deactivate/{id}")
+    public String deactivateCompany(@PathVariable("id")Long id){
+        companyService.deactivate(id);
+        return "redirect:/companies/list";
+    }
+
+    @GetMapping("/activate/{id}")
+    public String activateCompany(@PathVariable("id")Long id){
+        companyService.activate(id);
+        return "redirect:/companies/list";
+    }
+
+    @GetMapping("/create")
+    public String createCompany(Model model){
+        model.addAttribute("newCompany", new CompanyDTO());
+
+        return "/company/company-create";
+    }
+
+    @PostMapping("/create")
+    public String saveCompany(@ModelAttribute("newCompany") CompanyDTO newCompany){
+        companyService.createCompany(newCompany);
         return "redirect:/companies/list";
     }
 }
