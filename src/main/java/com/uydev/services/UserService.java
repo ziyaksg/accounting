@@ -8,4 +8,6 @@ public interface UserService {
     List<UserDTO> getAllUsers();
 
     void createNewUser(UserDTO newUser);
+
+    UserDTO getUserByUserName(String username);
 }

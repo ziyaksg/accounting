@@ -27,4 +27,9 @@ public class UserServiceImpl implements UserService {
     public void createNewUser(UserDTO newUser) {
         repository.save(mapper.convert(newUser, new User()));
     }
+
+    @Override
+    public UserDTO getUserByUserName(String username) {
+        return mapper.convert(repository.findUserByUsernameAndIsDeleted(username, false), new UserDTO());
+    }
 }
