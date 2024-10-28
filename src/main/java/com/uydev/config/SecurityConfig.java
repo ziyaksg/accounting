@@ -30,10 +30,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-//                .csrf(csrf -> csrf.ignoringRequestMatchers("/login", "/logout"))
+                .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(authrize->{
-//                    authrize
-//                        .requestMatchers("/users/**").hasAnyAuthority("Root User", "Admin");
+
                     authrize
                             .requestMatchers("/companies/**").hasAnyAuthority("Root User");
                     authrize
@@ -43,8 +42,7 @@ public class SecurityConfig {
                     })
                 .formLogin(form->form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/")
-//                        .successHandler(authSuccessHandler)
+                        .successHandler(authSuccessHandler)
                         .failureUrl("/login?error=true")
 
                 )
