@@ -17,4 +17,6 @@ public interface CompanyService {
      void activate(Long id);
 
      void createCompany(CompanyDTO newCompany);
+
+     List<String> getAllCounties();
 }

@@ -9,4 +9,6 @@ public interface RoleService {
     List<RoleDTO> getAllRoleForRoot();
 
     RoleDTO findById(long roleId);
+
+    List<RoleDTO> getAllRolesForCreateUser();
 }

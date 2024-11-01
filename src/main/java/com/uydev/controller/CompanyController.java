@@ -3,6 +3,7 @@ package com.uydev.controller;
 import com.uydev.dto.CompanyDTO;
 import com.uydev.services.CompanyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -55,6 +56,7 @@ public class CompanyController {
     @GetMapping("/create")
     public String createCompany(Model model){
         model.addAttribute("newCompany", new CompanyDTO());
+        model.addAttribute("countries", companyService.getAllCounties());
 
         return "/company/company-create";
     }

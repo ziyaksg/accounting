@@ -1,5 +1,6 @@
 package com.uydev.config;
 
+import com.uydev.entity.common.CustomUserDetails;
 import com.uydev.services.SecurityService;
 import com.uydev.services.impl.SecurityServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,6 @@ import org.springframework.security.authentication.event.AuthenticationSuccessEv
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -42,7 +42,10 @@ public class SecurityConfig {
                     })
                 .formLogin(form->form
                         .loginPage("/login")
+//                        .loginProcessingUrl("/loginProsess")
                         .successHandler(authSuccessHandler)
+//                                .usernameParameter("username")
+//                                .passwordParameter("password")
                         .failureUrl("/login?error=true")
 
                 )
@@ -73,5 +76,6 @@ public class SecurityConfig {
         return event ->
                 log.info("failure: {}", event.getAuthentication());
     }
+
 
 }

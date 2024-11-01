@@ -2,13 +2,11 @@ package com.uydev.entity.common;
 
 import com.uydev.entity.User;
 import com.uydev.enums.CompanyStatus;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -56,4 +54,19 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return this.user.isEnabled();
     }
+
+
+    public Long getId() {
+        return this.user.getId();
+    }
+
+    public String getFullNameForProfile() {
+        return this.user.getFirstname() + " " + this.user.getLastname();
+    }
+
+    public String getCompanyTitleForProfile() {
+        return this.user.getCompany().getTitle();
+    }
+
+
 }

@@ -1,27 +1,38 @@
 package com.uydev.services.impl;
 
+import com.uydev.clients.CountryClient;
 import com.uydev.dto.CompanyDTO;
+import com.uydev.dto.Country;
+import com.uydev.dto.CountryInfoDTO;
+import com.uydev.dto.UserDTO;
 import com.uydev.entity.Company;
 import com.uydev.enums.CompanyStatus;
 import com.uydev.mapper.MapperUtil;
 import com.uydev.repository.CompanyRepository;
 import com.uydev.services.CompanyService;
 
+import com.uydev.services.SecurityService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.util.List;
+
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
    private final CompanyRepository repository;
+   private final SecurityService securityService;
+   private final CountryClient countryClient;
    private final MapperUtil mapper;
 
-    public CompanyServiceImpl(CompanyRepository repository, MapperUtil mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
 
     @Override
     public List<CompanyDTO> getAllCompany() {
+        UserDTO loggedInUser = securityService.getLoggedInUser();
+        if (loggedInUser.getId() !=1){
+            return List.of(loggedInUser.getCompany());
+        }
         List<Company> allCompanies = repository.getAllCompanyForRoot(1L);
         return allCompanies.stream().map(company -> mapper.convert(company, new CompanyDTO())).toList();
     }
@@ -60,5 +71,18 @@ public class CompanyServiceImpl implements CompanyService {
         newCompany.setCompanyStatus(CompanyStatus.ACTIVE);
         repository.save(mapper.convert(newCompany, new Company()));
 
+    }
+
+    @Override
+    public List<String> getAllCounties() {
+        ResponseEntity<CountryInfoDTO> allCountiesInfo = countryClient.getCountries();
+        if (allCountiesInfo.getStatusCode().is2xxSuccessful()){
+            CountryInfoDTO allCounties = allCountiesInfo.getBody();
+            assert allCounties != null;
+           Collection<Map<String, Country>> country = allCounties.getData().values();
+           List<Country> countries = (List<Country>) country.stream().map(Map::values);
+           return  countries.stream().map(Country::getCountry).toList();
+        }
+        throw new RuntimeException("Countries didn't fetched from County Client");
     }
 }

@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,7 +28,7 @@ public class UserController {
     @GetMapping("/create")
     public String createUser(Model model){
         model.addAttribute("newUser", new UserDTO());
-        model.addAttribute("userRoles", roleService.getAllRoleForRoot());
+        model.addAttribute("userRoles", roleService.getAllRolesForCreateUser());
         model.addAttribute("companies",companyService.getAllCompany());
 
         return "/user/user-create";
@@ -40,6 +37,26 @@ public class UserController {
     @PostMapping("/create")
     public String saveUser(@ModelAttribute("newUser") UserDTO newUser){
         userService.createNewUser(newUser);
+        return "redirect:/users/list";
+    }
+
+    @GetMapping("/update/{id}")
+    public String updateUser(@PathVariable("id") Long userId, Model model){
+        model.addAttribute("user", userService.getUserById(userId));
+        model.addAttribute("userRoles", roleService.getAllRolesForCreateUser());
+        model.addAttribute("companies", companyService.getAllCompany());
+        return "/user/user-update";
+    }
+
+    @PostMapping("/update/{id}")
+    public String saveUpdatedUser(@ModelAttribute("user") UserDTO updatedUser){
+        userService.updateUser(updatedUser);
+        return "redirect:/users/list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteUser(@PathVariable("id") Long userId){
+        userService.delete(userId);
         return "redirect:/users/list";
     }
 

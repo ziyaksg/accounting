@@ -31,7 +31,7 @@ public class UserDTO {
 
     private CompanyDTO company;
 
-    private boolean enabled;
+    private boolean enabled = true;
 
     private boolean isOnlyAdmin; //(should be true if this user is only admin of any company.) I will write in business logic part
 

@@ -8,6 +8,8 @@ import com.uydev.services.SecurityService;
 import com.uydev.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -29,5 +31,11 @@ public class SecurityServiceImpl implements SecurityService {
            throw  new UsernameNotFoundException("No User with this user name");
        }
         return new CustomUserDetails(mapper.convert(userDto, new User()));
+    }
+
+    @Override
+    public UserDTO getLoggedInUser() {
+        var username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userService.getUserByUserName(username);
     }
 }
