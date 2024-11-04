@@ -2,16 +2,11 @@ package com.uydev;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.web.client.RestClient;
 
 @SpringBootApplication
-@EnableFeignClients
-@ImportAutoConfiguration({FeignAutoConfiguration.class})
 public class AcountingApplication {
 
     public static void main(String[] args) {
@@ -21,6 +16,11 @@ public class AcountingApplication {
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
+    }
+
+    @Bean
+    public RestClient getRestClient(){
+        return RestClient.create();
     }
 
 }

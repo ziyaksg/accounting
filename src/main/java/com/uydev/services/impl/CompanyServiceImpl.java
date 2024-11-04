@@ -75,14 +75,13 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public List<String> getAllCounties() {
-        ResponseEntity<CountryInfoDTO> allCountiesInfo = countryClient.getCountries();
-        if (allCountiesInfo.getStatusCode().is2xxSuccessful()){
-            CountryInfoDTO allCounties = allCountiesInfo.getBody();
-            assert allCounties != null;
-           Collection<Map<String, Country>> country = allCounties.getData().values();
-           List<Country> countries = (List<Country>) country.stream().map(Map::values);
-           return  countries.stream().map(Country::getCountry).toList();
+        CountryInfoDTO allCountiesInfo = countryClient.getCountries();
+        if (allCountiesInfo.getStatus().equals("OK"))
+        {
+            Collection<Country> country = allCountiesInfo.getData().values();
+           return country.stream().map(Country::getCountry).toList();
+
         }
-        throw new RuntimeException("Countries didn't fetched from County Client");
+        return List.of();
     }
 }
