@@ -9,8 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,4 +36,32 @@ public class ClientVendorsController {
 
         return "/clientVendor/clientVendor-create";
     }
+
+    @PostMapping("/create")
+    public String saveClientVendors(@ModelAttribute("newClientVendor") ClientVendorDTO newClientVendor){
+        clientVendorService.createNewClientVendor(newClientVendor);
+        return "redirect:/clientVendors/list";
+    }
+    @GetMapping("/update/{id}")
+    public String updateClientVendor(@PathVariable("id")long id, Model model){
+
+        model.addAttribute("clientVendor", clientVendorService.findById(id));
+        model.addAttribute("clientVendorTypes", List.of(ClientVendorType.values()));
+        model.addAttribute("countries", companyService.getAllCounties());
+
+        return "/clientVendor/clientVendor-update";
+    }
+
+    @PostMapping("/update/{id}")
+    public String saveUpdatedClientVendor(@ModelAttribute("clientVendor") ClientVendorDTO updatedClientVendor){
+        clientVendorService.updateClientVendor(updatedClientVendor);
+        return "redirect:/clientVendors/list";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String deleteClientVendor(@PathVariable("id")long clientVendorId){
+        clientVendorService.deleteByid(clientVendorId);
+         return "redirect:/clientVendors/list";
+    }
+
 }

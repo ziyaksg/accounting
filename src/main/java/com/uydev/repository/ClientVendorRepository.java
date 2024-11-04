@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface ClientVendorRepository extends JpaRepository<ClientVendor, Long> {
     List<ClientVendor> findAllByIsDeleted(boolean isDeleted);
+
+    ClientVendor findByIdAndIsDeleted(Long id, boolean isDeleted);
 }

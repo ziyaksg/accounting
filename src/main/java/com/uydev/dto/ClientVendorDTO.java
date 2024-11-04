@@ -28,7 +28,7 @@ public class ClientVendorDTO {
 
     private boolean hasInvoice;
 
-    private Company company;
+    private CompanyDTO company;
 
 
 }
