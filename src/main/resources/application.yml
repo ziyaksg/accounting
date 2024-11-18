@@ -3,9 +3,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/accounting
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/accounting
     username: postgres
-    password: ${DB_PASSWORD:asiye}
+    password: ${DB_PASSWORD:admin}
 
   sql:
     init:

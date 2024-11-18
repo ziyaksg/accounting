@@ -2,7 +2,6 @@ package com.uydev.controller;
 
 
 import com.uydev.dto.CategoryDTO;
-import com.uydev.entity.Category;
 import com.uydev.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
