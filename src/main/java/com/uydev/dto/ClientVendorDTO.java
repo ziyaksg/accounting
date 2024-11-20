@@ -1,5 +1,7 @@
 package com.uydev.dto;
 
+import com.uydev.entity.Company;
+import com.uydev.enums.ClientVendorType;
 import lombok.*;
 
 
@@ -16,6 +18,8 @@ public class ClientVendorDTO {
 
     private String clientVendorName;
 
+    private ClientVendorType clientVendorType;
+
     private String phone;
 
     private String website;
@@ -23,6 +27,8 @@ public class ClientVendorDTO {
     private AddressDTO address;
 
     private boolean hasInvoice;
+
+    private CompanyDTO company;
 
 
 }
