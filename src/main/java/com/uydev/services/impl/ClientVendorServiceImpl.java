@@ -3,6 +3,7 @@ package com.uydev.services.impl;
 import com.uydev.dto.ClientVendorDTO;
 import com.uydev.dto.CompanyDTO;
 import com.uydev.entity.ClientVendor;
+import com.uydev.enums.ClientVendorType;
 import com.uydev.mapper.MapperUtil;
 import com.uydev.repository.ClientVendorRepository;
 import com.uydev.services.ClientVendorService;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +54,16 @@ public class ClientVendorServiceImpl implements ClientVendorService {
         ClientVendor clientVendor = repository.findById(clientVendorId).orElseThrow();
         clientVendor.setIsDeleted(true);
         repository.save(clientVendor);
+
+    }
+
+    @Override
+    public List<ClientVendorDTO> getAllVendors() {
+        Long companyId = securityService.getLoggedInUser().getCompany().getId();
+
+        return repository.findClientVendorsByClientVendorTypeAndCompanyIdAndIsDeleted
+                (ClientVendorType.VENDOR,companyId,false).stream()
+                .map(vendor->mapper.convert(vendor,new ClientVendorDTO())).collect(Collectors.toList());
 
     }
 }
