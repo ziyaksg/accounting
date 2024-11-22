@@ -3,9 +3,7 @@ package com.uydev.controller;
 import com.uydev.dto.InvoiceDTO;
 import com.uydev.dto.InvoiceProductDTO;
 import com.uydev.dto.ProductDTO;
-import com.uydev.services.InvoiceProductService;
-import com.uydev.services.InvoiceService;
-import com.uydev.services.ProductService;
+import com.uydev.services.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +16,8 @@ public class PurchaseInvoiceController {
     private final InvoiceService invoiceService;
     private final ProductService productService;
     private final InvoiceProductService invoiceProductService;
+    private final SecurityService securityService;
+
     @GetMapping("/list")
     public String getList(Model model){
 
@@ -62,6 +62,28 @@ public class PurchaseInvoiceController {
 
         return "redirect:/purchaseInvoices/update/"+id;
     }
+    @GetMapping("/delete/{id}")
+        public String deletePurchaseInvoice(@PathVariable("id") Long id){
+        invoiceService.delete(id);
+
+       return "redirect:/purchaseInvoices/list";
+    }
+    @GetMapping("removeInvoiceProduct/{invoiceId}/{invoiceProductId}")
+    public String removeInvoiceProduct(@PathVariable("invoiceProductId") Long invoiceProductId, @PathVariable("invoiceId") Long invoiceId){
+        invoiceService.removeProduct(invoiceId,invoiceProductId);
+
+        return "redirect:/purchaseInvoices/update/"+invoiceId;
+    }
+
+    @GetMapping("/print/{id}")
+    public String printPurchaseInvoice(@PathVariable("id") Long id ,Model model){
+        model.addAttribute("company",securityService.getLoggedInUser().getCompany());
+        model.addAttribute("invoice",invoiceService.findById(id));
+        model.addAttribute("invoiceProducts",invoiceProductService.getAllInvoiceProducts(id));
+
+        return "/invoice/invoice_print";
+    }
+
 
 
 
