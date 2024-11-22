@@ -7,6 +7,10 @@ public class UserConverter implements Converter<String, UserDTO> {
 
     @Override
     public UserDTO convert(String source) {
-        return null;
+
+        if (source == null || source.isEmpty()) {
+            return null;
+
+        }return null;
     }
 }

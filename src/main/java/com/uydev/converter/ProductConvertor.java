@@ -15,6 +15,10 @@ public class ProductConvertor implements Converter<String, ProductDTO> {
 
     @Override
     public ProductDTO convert(String id) {
+        if (id == null || id.isEmpty()) {
+            return null;
+
+        }
         return productService.findById(Long.parseLong(id));
     }
 }

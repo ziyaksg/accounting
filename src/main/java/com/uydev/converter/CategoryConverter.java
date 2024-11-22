@@ -13,6 +13,10 @@ public class CategoryConverter implements Converter<String, CategoryDTO> {
     private final CategoryService categoryService;
     @Override
     public CategoryDTO convert(String categoryId) {
+        if (categoryId == null || categoryId.isEmpty()) {
+            return null;
+
+        }
         return categoryService.getCategoryById(Long.parseLong(categoryId));
     }
 }

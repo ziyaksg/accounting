@@ -13,6 +13,10 @@ public class ClientVendorConvertor implements Converter<String, ClientVendorDTO>
 
     @Override
     public ClientVendorDTO convert(String id) {
+        if (id == null || id.isEmpty()) {
+            return null;
+
+        }
         return clientVendorService.findById(Long.parseLong(id));
     }
 }

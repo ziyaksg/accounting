@@ -9,4 +9,6 @@ public interface InvoiceProductService {
     void save(InvoiceProductDTO invoiceProductDTO);
 
     List<InvoiceProductDTO> getAllInvoiceProducts(Long invoiceId);
+
+    void deleteById(Long id);
 }
