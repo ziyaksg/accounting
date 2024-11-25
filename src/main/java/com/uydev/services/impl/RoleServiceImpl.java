@@ -21,24 +21,24 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public List<RoleDTO> getAllRoles() {
-        List<Role> allRoles =  repository.findAllRoles();
-        return  allRoles.stream().map(role->mapper.convert(role,new RoleDTO())).toList();
+        List<Role> allRoles = repository.findAllRoles();
+        return allRoles.stream().map(role -> mapper.convert(role, new RoleDTO())).toList();
     }
 
     @Override
     public List<RoleDTO> getAllRoleForRoot() {
-        return List.of(mapper.convert(repository.findById(2L),new RoleDTO()));
+        return List.of(mapper.convert(repository.findById(2L), new RoleDTO()));
     }
 
     @Override
     public RoleDTO findById(long roleId) {
-       return mapper.convert(repository.findById(roleId), new RoleDTO());
+        return mapper.convert(repository.findById(roleId), new RoleDTO());
     }
 
     @Override
     public List<RoleDTO> getAllRolesForCreateUser() {
         UserDTO loggedInUser = securityService.getLoggedInUser();
-        if (loggedInUser.getId() !=1){
+        if (loggedInUser.getId() != 1) {
             return getAllRoles();
         }
         return getAllRoleForRoot();

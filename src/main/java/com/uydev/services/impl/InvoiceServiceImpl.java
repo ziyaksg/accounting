@@ -30,20 +30,28 @@ public class InvoiceServiceImpl implements InvoiceService {
 
     @Override
     public List<InvoiceDTO> getAllPurchaseInvoice() {
+        return getInvoicesByType(InvoiceType.PURCHASE);
+    }
+
+    private List<InvoiceDTO> getInvoicesByType(InvoiceType invoiceType) {
         Long companyId = securityService.getLoggedInUser().getCompany().getId();
         return invoiceRepository.findAllByCompanyIdAndInvoiceTypeAndIsDeleted
-                        (companyId, InvoiceType.PURCHASE, false).stream()
+                        (companyId, invoiceType, false).stream()
                 .map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());
     }
 
     @Override
     public InvoiceDTO createNewPurchaseInvoice() {
+        return generateNewInvoiceByType(InvoiceType.PURCHASE);
+    }
+
+    private InvoiceDTO generateNewInvoiceByType(InvoiceType invoiceType) {
         CompanyDTO companyDTO = securityService.getLoggedInUser().getCompany();
         InvoiceDTO invoiceDTO = new InvoiceDTO();
         invoiceDTO.setDate(LocalDate.now());
 
         invoiceDTO.setInvoiceNo(
-                getNextInvoiceNo(companyDTO.getId(), InvoiceType.PURCHASE)
+                getNextInvoiceNo(companyDTO.getId(), invoiceType)
         );
         return invoiceDTO;
     }
@@ -64,25 +72,40 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public InvoiceDTO save(InvoiceDTO invoiceDTO) {
+    public InvoiceDTO savePurchaseInvoice(InvoiceDTO invoiceDTO) {
+        return saveInvoices(invoiceDTO, InvoiceType.PURCHASE);
+    }
+
+    @Override
+    public InvoiceDTO saveSalesInvoice(InvoiceDTO invoiceDTO) {
+        return saveInvoices(invoiceDTO, InvoiceType.SALES);
+    }
+
+    private InvoiceDTO saveInvoices(InvoiceDTO invoiceDTO, InvoiceType invoiceType) {
         invoiceDTO.setCompany(securityService.getLoggedInUser().getCompany());
-        invoiceDTO.setInvoiceType(InvoiceType.PURCHASE);
+        invoiceDTO.setInvoiceType(invoiceType);
         invoiceDTO.setInvoiceStatus(InvoiceStatus.AWAITING_APPROVAL);
         return mapperUtil.convert(invoiceRepository
                 .save(mapperUtil.convert(invoiceDTO, new Invoice())), new InvoiceDTO());
     }
 
     @Override
-    public InvoiceDTO findById(Long id) {
+    public InvoiceDTO findById(Long id,InvoiceType invoiceType) {
         Invoice invoice = invoiceRepository.findById(id).orElseThrow(() -> new RuntimeException("there is no invoice with " + id));
         InvoiceDTO invoiceDto = mapperUtil.convert(invoice, new InvoiceDTO());
-        List<InvoiceProductDTO> invoiceProducts = invoiceProductService.getAllInvoiceProducts(id);
+        List<InvoiceProductDTO> invoiceProducts;
+        if (invoiceType.equals(InvoiceType.PURCHASE)) {
+     invoiceProducts= invoiceProductService.getAllPurchaseInvoiceProducts(id);
+        }
+        else {
+            invoiceProducts=invoiceProductService.getAllSalesInvoiceProducts(id);
+        }
+
         invoiceDto.setTax(calculateTax(invoiceProducts));
         invoiceDto.setPrice(calculateSubTotal(invoiceProducts));    //subtotal;
         invoiceDto.setTotal(invoiceDto.getPrice().add(invoiceDto.getTax()));//GRAND TOTAL
         return invoiceDto;
     }
-
 
 
     private BigDecimal calculateSubTotal(List<InvoiceProductDTO> invoiceProducts) {
@@ -112,6 +135,23 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
+    public List<InvoiceDTO> getAllSalesInvoices() {
+        return getInvoicesByType(InvoiceType.SALES);
+
+    }
+
+    @Override
+    public InvoiceDTO createNewSalesInvoice() {
+        return generateNewInvoiceByType(InvoiceType.SALES);
+
+    }
+
+    @Override
+    public List<ClientVendorDTO> getAllClients() {
+        return clientVendorService.getAllClients();
+    }
+
+    @Override
     public void addProduct(InvoiceProductDTO invoiceProductDTO, Long invoiceId) {
         Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(() -> new RuntimeException("there is no invoice with " + invoiceId));
         invoiceProductDTO.setInvoice(mapperUtil.convert(invoice, new InvoiceDTO()));
@@ -124,10 +164,23 @@ public class InvoiceServiceImpl implements InvoiceService {
         invoice.setIsDeleted(true);
         invoiceRepository.save(invoice);
     }
-
+@Override
+    public void removeProductFromPurchaseInvoice(Long invoiceId, Long invoiceProductId) {
+        removeProduct(InvoiceType.PURCHASE, invoiceId, invoiceProductId);
+    }
     @Override
-    public void removeProduct(Long invoiceId, Long invoiceProductId) {
-        List<InvoiceProductDTO> invoiceProductList = invoiceProductService.getAllInvoiceProducts(invoiceId);
+    public void removeProductFromSalesInvoice(Long invoiceId, Long invoiceProductId) {
+        removeProduct(InvoiceType.SALES, invoiceId, invoiceProductId);
+    }
+
+    private void removeProduct(InvoiceType invoiceType, Long invoiceId, Long invoiceProductId) {
+        List<InvoiceProductDTO> invoiceProductList;
+        if (invoiceType.equals(InvoiceType.PURCHASE)) {
+            invoiceProductList = invoiceProductService.getAllPurchaseInvoiceProducts(invoiceId);
+        } else {
+            invoiceProductList = invoiceProductService.getAllSalesInvoiceProducts(invoiceId);
+        }
+
         for (InvoiceProductDTO invoiceProduct : invoiceProductList) {
             if (invoiceProduct.getId().equals(invoiceProductId)) {
                 invoiceProductService.deleteById(invoiceProduct.getId());

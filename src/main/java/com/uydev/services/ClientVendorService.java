@@ -18,4 +18,5 @@ public interface ClientVendorService {
 
     List<ClientVendorDTO> getAllVendors();
 
+    List<ClientVendorDTO> getAllClients();
 }

@@ -15,10 +15,10 @@ import org.hibernate.annotations.Where;
 @Where(clause = "is_deleted = false")
 @Table(name = "companies")
 @ToString
-public class Company extends BaseEntity{
+public class Company extends BaseEntity {
 
     @Column(unique = true)
-    private String  title;
+    private String title;
 
     private String phone;
 

@@ -21,16 +21,16 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
-   private final CompanyRepository repository;
-   private final SecurityService securityService;
-   private final CountryClient countryClient;
-   private final MapperUtil mapper;
+    private final CompanyRepository repository;
+    private final SecurityService securityService;
+    private final CountryClient countryClient;
+    private final MapperUtil mapper;
 
 
     @Override
     public List<CompanyDTO> getAllCompany() {
         UserDTO loggedInUser = securityService.getLoggedInUser();
-        if (loggedInUser.getId() !=1){
+        if (loggedInUser.getId() != 1) {
             return List.of(loggedInUser.getCompany());
         }
         List<Company> allCompanies = repository.getAllCompanyForRoot(1L);
@@ -39,7 +39,7 @@ public class CompanyServiceImpl implements CompanyService {
 
     @Override
     public CompanyDTO getCompanyById(Long id) {
-        return mapper.convert(repository.getCompanyById(id),new CompanyDTO());
+        return mapper.convert(repository.getCompanyById(id), new CompanyDTO());
     }
 
     @Override
@@ -47,7 +47,7 @@ public class CompanyServiceImpl implements CompanyService {
 
         Company oldCompany = repository.findById(companyDto.getId()).orElseThrow(() -> new RuntimeException("Company with id: " + companyDto.getId() + " Not Found "));
         companyDto.setCompanyStatus(oldCompany.getCompanyStatus());
-        Company updatedCompany = mapper.convert(companyDto,new Company());
+        Company updatedCompany = mapper.convert(companyDto, new Company());
         repository.save(updatedCompany);
     }
 
@@ -76,10 +76,9 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public List<String> getAllCounties() {
         CountryInfoDTO allCountiesInfo = countryClient.getCountries();
-        if (allCountiesInfo.getStatus().equals("OK"))
-        {
+        if (allCountiesInfo.getStatus().equals("OK")) {
             Collection<Country> country = allCountiesInfo.getData().values();
-           return country.stream().map(Country::getCountry).toList();
+            return country.stream().map(Country::getCountry).toList();
 
         }
         return List.of();

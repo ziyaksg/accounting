@@ -29,12 +29,12 @@ public class UserServiceImpl implements UserService {
 
         List<User> userList = repository.findAllAndIsDeleted(false);
 
-        if (currentUser.getId() == 1){
-            return userList.stream().filter(user->user.getId()!=1 && user.getRole().getDescription().equals("Admin")).
-                    map(user->mapper.convert(user, new UserDTO())).toList();
+        if (currentUser.getId() == 1) {
+            return userList.stream().filter(user -> user.getId() != 1 && user.getRole().getDescription().equals("Admin")).
+                    map(user -> mapper.convert(user, new UserDTO())).toList();
         }
-        return userList.stream().filter(user->user.getId()!=1 && user.getCompany().getTitle().equals(companyTitle)).
-                map(user->mapper.convert(user, new UserDTO())).toList();
+        return userList.stream().filter(user -> user.getId() != 1 && user.getCompany().getTitle().equals(companyTitle)).
+                map(user -> mapper.convert(user, new UserDTO())).toList();
 
     }
 
@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void delete(Long userId) {
-        User user = repository.findById(userId).orElseThrow(()-> new UsernameNotFoundException("there is No user with id " + userId));
+        User user = repository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("there is No user with id " + userId));
         user.setIsDeleted(true);
         repository.save(user);
     }

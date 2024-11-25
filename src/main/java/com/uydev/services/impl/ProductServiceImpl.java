@@ -21,9 +21,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductDTO> getAllProducts() {
         Long currentCompanyId = securityService.getLoggedInUser().getCompany().getId();
-        List<Product> products =  repository.findProductsByCompanyId(currentCompanyId);
+        List<Product> products = repository.findProductsByCompanyId(currentCompanyId);
         return products.stream()
-                .map(pro->mapper.convert(pro,new ProductDTO())).toList();
+                .map(pro -> mapper.convert(pro, new ProductDTO())).toList();
     }
 
     @Override
@@ -33,13 +33,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductDTO findById(Long productId) {
-        Product product = repository.findByIdAndIsDeleted(productId,false);
+        Product product = repository.findByIdAndIsDeleted(productId, false);
         return mapper.convert(product, new ProductDTO());
     }
 
     @Override
     public void deleteById(Long id) {
-        Product product = repository.findById(id).orElseThrow(()->new RuntimeException("there is no Product with Id " + id));
+        Product product = repository.findById(id).orElseThrow(() -> new RuntimeException("there is no Product with Id " + id));
         product.setIsDeleted(true);
         repository.save(product);
     }

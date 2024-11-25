@@ -24,7 +24,7 @@ public class Payment extends BaseEntity {
     private LocalDate paymentDate;
     private boolean isPaid;
     private String companyStripeId;
-    
+
     @Enumerated(EnumType.STRING)
     private Months month;
 

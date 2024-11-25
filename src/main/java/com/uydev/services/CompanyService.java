@@ -6,17 +6,17 @@ import java.util.List;
 
 public interface CompanyService {
 
-     List<CompanyDTO> getAllCompany();
+    List<CompanyDTO> getAllCompany();
 
-     CompanyDTO getCompanyById(Long id);
+    CompanyDTO getCompanyById(Long id);
 
-     void updateCompany(CompanyDTO companyDto);
+    void updateCompany(CompanyDTO companyDto);
 
-     CompanyDTO deactivate(Long id);
+    CompanyDTO deactivate(Long id);
 
-     void activate(Long id);
+    void activate(Long id);
 
-     void createCompany(CompanyDTO newCompany);
+    void createCompany(CompanyDTO newCompany);
 
-     List<String> getAllCounties();
+    List<String> getAllCounties();
 }

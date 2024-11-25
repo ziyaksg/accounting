@@ -20,13 +20,13 @@ public class ProductController {
     private final CategoryService categoryService;
 
     @GetMapping("/list")
-    public String getAllProductList(Model model){
+    public String getAllProductList(Model model) {
         model.addAttribute("products", productService.getAllProducts());
         return "/product/product-list";
     }
 
     @GetMapping("/create")
-    public String createProduct(Model model){
+    public String createProduct(Model model) {
         model.addAttribute("newProduct", new ProductDTO());
         model.addAttribute("categories", categoryService.getCategoryList());
         model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
@@ -34,14 +34,14 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public String saveNewProduct(@ModelAttribute("newProduct") ProductDTO newProduct){
+    public String saveNewProduct(@ModelAttribute("newProduct") ProductDTO newProduct) {
         productService.save(newProduct);
         return "redirect:/products/list";
     }
 
 
     @GetMapping("/update/{id}")
-    public String updateProduct(@PathVariable("id") Long productId, Model model){
+    public String updateProduct(@PathVariable("id") Long productId, Model model) {
         model.addAttribute("product", productService.findById(productId));
         model.addAttribute("categories", categoryService.getCategoryList());
         model.addAttribute("productUnits", Arrays.asList(ProductUnit.values()));
@@ -49,13 +49,13 @@ public class ProductController {
     }
 
     @PostMapping("/update/{id}")
-    public String saveUpdatedProduct(@ModelAttribute("product") ProductDTO product){
+    public String saveUpdatedProduct(@ModelAttribute("product") ProductDTO product) {
         productService.save(product);
         return "redirect:/products/list";
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteProduct(@PathVariable("id") Long id){
+    public String deleteProduct(@PathVariable("id") Long id) {
         productService.deleteById(id);
         return "redirect:/products/list";
     }

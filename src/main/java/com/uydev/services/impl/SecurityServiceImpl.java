@@ -27,9 +27,9 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserDTO userDto = userService.getUserByUserName(username);
-       if (userDto == null){
-           throw  new UsernameNotFoundException("No User with this user name");
-       }
+        if (userDto == null) {
+            throw new UsernameNotFoundException("No User with this user name");
+        }
         return new CustomUserDetails(mapper.convert(userDto, new User()));
     }
 

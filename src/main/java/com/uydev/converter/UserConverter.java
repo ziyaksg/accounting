@@ -11,6 +11,7 @@ public class UserConverter implements Converter<String, UserDTO> {
         if (source == null || source.isEmpty()) {
             return null;
 
-        }return null;
+        }
+        return null;
     }
 }

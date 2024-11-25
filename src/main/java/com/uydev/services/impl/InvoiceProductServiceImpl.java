@@ -32,17 +32,27 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public void save(InvoiceProductDTO invoiceProductDTO) {
-        invoiceProductRepository.save(mapperUtil.convert(invoiceProductDTO,new InvoiceProduct()));
+        invoiceProductRepository.save(mapperUtil.convert(invoiceProductDTO, new InvoiceProduct()));
     }
 
     @Override
-    public List<InvoiceProductDTO> getAllInvoiceProducts(Long invoiceId) {
+    public List<InvoiceProductDTO> getAllPurchaseInvoiceProducts(Long invoiceId) {
+        return getInvoiceProductsByType(InvoiceType.PURCHASE, invoiceId);
+    }
+
+    @Override
+    public List<InvoiceProductDTO> getAllSalesInvoiceProducts(Long invoiceId) {
+        return getInvoiceProductsByType(InvoiceType.SALES, invoiceId);
+    }
+
+    private List<InvoiceProductDTO> getInvoiceProductsByType(InvoiceType invoiceType, Long invoiceId) {
         Long companyId = securityService.getLoggedInUser().getCompany().getId();
         List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllInvoiceProductByCompanyIdAndInvoiceType
-                (companyId, InvoiceType.PURCHASE, false);
+                (companyId, invoiceType, false, invoiceId);
         List<InvoiceProductDTO> invoiceProductList = invoiceProducts.stream().map(ip -> mapperUtil.convert(ip, new InvoiceProductDTO())).collect(Collectors.toList());
         return calculateProductTotal(invoiceProductList);
     }
+
     private List<InvoiceProductDTO> calculateProductTotal(List<InvoiceProductDTO> invoiceProducts) {
 
         return invoiceProducts.stream()

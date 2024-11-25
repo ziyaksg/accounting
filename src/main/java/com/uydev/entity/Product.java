@@ -13,7 +13,7 @@ import org.hibernate.annotations.Where;
 @Entity
 @Table(name = "products")
 @Where(clause = "is_deleted=false")
-public class Product extends BaseEntity{
+public class Product extends BaseEntity {
 
     private String name;
     private int quantityInStock;

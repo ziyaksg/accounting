@@ -1,4 +1,5 @@
 package com.uydev.entity;
+
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;

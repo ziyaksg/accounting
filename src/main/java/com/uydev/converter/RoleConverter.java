@@ -17,6 +17,7 @@ public class RoleConverter implements Converter<String, RoleDTO> {
         if (roleId == null || roleId.isEmpty()) {
             return null;
 
-        }return roleService.findById(Long.parseLong(roleId));
+        }
+        return roleService.findById(Long.parseLong(roleId));
     }
 }

@@ -1,4 +1,5 @@
 package com.uydev.dto;
+
 import lombok.Getter;
 
 import java.util.Map;

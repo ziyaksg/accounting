@@ -38,11 +38,4 @@ public class Invoice extends BaseEntity {
     private Company company;
 
 
-
-
-
-
-
-
-
 }

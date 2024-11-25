@@ -39,8 +39,4 @@ public class InvoiceDTO {
     private BigDecimal total;
 
 
-
-
-
-
 }

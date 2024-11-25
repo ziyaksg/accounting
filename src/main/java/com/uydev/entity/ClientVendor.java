@@ -1,4 +1,5 @@
 package com.uydev.entity;
+
 import com.uydev.enums.ClientVendorType;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -32,7 +33,6 @@ public class ClientVendor extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
-
 
 
 }

@@ -13,7 +13,7 @@ public class CountryClient {
         this.restClient = restClient;
     }
 
-    public CountryInfoDTO getCountries(){
+    public CountryInfoDTO getCountries() {
         return restClient.get()
                 .uri("https://api.first.org/data/v1/countries")
                 .retrieve()

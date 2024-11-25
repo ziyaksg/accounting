@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class CategoryConverter implements Converter<String, CategoryDTO> {
     private final CategoryService categoryService;
+
     @Override
     public CategoryDTO convert(String categoryId) {
         if (categoryId == null || categoryId.isEmpty()) {

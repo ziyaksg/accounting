@@ -2,7 +2,7 @@ package com.uydev.enums;
 
 public enum InvoiceType {
 
-    PURCHASE("Purchase"),SALES("Sales");
+    PURCHASE("Purchase"), SALES("Sales");
 
     private final String value;
 

@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    List<Category> findCategoriesByCompany_IdAndIsDeleted(Long companyId,boolean isDeleted);
+    List<Category> findCategoriesByCompany_IdAndIsDeleted(Long companyId, boolean isDeleted);
 
 }

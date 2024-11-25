@@ -14,9 +14,9 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "invoice_products")
 @Where(clause = "is_deleted=false")
-public class InvoiceProduct extends BaseEntity{
+public class InvoiceProduct extends BaseEntity {
 
-     private int quantity;
+    private int quantity;
 
     private BigDecimal price;
 
@@ -24,18 +24,16 @@ public class InvoiceProduct extends BaseEntity{
 
     private BigDecimal profitLoss;
 
-   private int remainingQuantity;
+    private int remainingQuantity;
 
-   @ManyToOne
-   @JoinColumn(name = "invoice_id")
+    @ManyToOne
+    @JoinColumn(name = "invoice_id")
     private Invoice invoice;
 
 
-   @ManyToOne
-   @JoinColumn(name = "product_id")
+    @ManyToOne
+    @JoinColumn(name = "product_id")
     private Product product;
-
-
 
 
 }

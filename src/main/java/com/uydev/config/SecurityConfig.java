@@ -31,7 +31,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(Customizer.withDefaults())
-                .authorizeHttpRequests(authrize->{
+                .authorizeHttpRequests(authrize -> {
 
                     authrize
                             .requestMatchers("/companies/**").hasAnyAuthority("Root User");
@@ -39,14 +39,14 @@ public class SecurityConfig {
                             .requestMatchers("/", "/login", "fragments", "/assets/**", "/img/**")
                             .permitAll();
                     authrize.anyRequest().authenticated();
-                    })
-                .formLogin(form->form
-                        .loginPage("/login")
+                })
+                .formLogin(form -> form
+                                .loginPage("/login")
 //                        .loginProcessingUrl("/loginProsess")
-                        .successHandler(authSuccessHandler)
+                                .successHandler(authSuccessHandler)
 //                                .usernameParameter("username")
 //                                .passwordParameter("password")
-                        .failureUrl("/login?error=true")
+                                .failureUrl("/login?error=true")
 
                 )
                 .logout(logoutConfigurer -> logoutConfigurer
@@ -54,7 +54,7 @@ public class SecurityConfig {
                         .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/login")
                 )
-                .rememberMe(token->token.tokenValiditySeconds(3600).key("uydev")
+                .rememberMe(token -> token.tokenValiditySeconds(3600).key("uydev")
                         .userDetailsService(securityService));
 
         return http.build();
@@ -62,17 +62,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    ApplicationListener<AuthenticationSuccessEvent> successEvent(){
+    ApplicationListener<AuthenticationSuccessEvent> successEvent() {
         return event ->
                 log.info("success: {}", event.getAuthentication());
     }
+
     @Bean
-    ApplicationListener<AuthenticationFailureBadCredentialsEvent> failureEnet(){
+    ApplicationListener<AuthenticationFailureBadCredentialsEvent> failureEnet() {
         return event ->
                 log.info("failure: {}", event.getAuthentication());
     }

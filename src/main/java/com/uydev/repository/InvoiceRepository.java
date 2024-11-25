@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface InvoiceRepository extends JpaRepository<Invoice,Long> {
+public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     List<Invoice> findAllByCompanyIdAndInvoiceTypeAndIsDeleted
-            (Long companyId, InvoiceType invoiceType,boolean isDeleted);
-    Integer countAllByCompanyIdAndInvoiceType(Long companyId,InvoiceType invoiceType);
+            (Long companyId, InvoiceType invoiceType, boolean isDeleted);
+
+    Integer countAllByCompanyIdAndInvoiceType(Long companyId, InvoiceType invoiceType);
 }
