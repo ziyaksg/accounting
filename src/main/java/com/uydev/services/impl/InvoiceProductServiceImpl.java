@@ -45,6 +45,16 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         return getInvoiceProductsByType(InvoiceType.SALES, invoiceId);
     }
 
+    @Override
+    public BigDecimal getProfitLossByMonth(int year, int monthValue, Long id, InvoiceType invoiceType) {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.getTotalProfitLossByMonthForCompany(year, monthValue, id, invoiceType);
+        return  invoiceProducts.stream()
+            .map(InvoiceProduct::getProfitLoss)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+
+    }
+
     private List<InvoiceProductDTO> getInvoiceProductsByType(InvoiceType invoiceType, Long invoiceId) {
         Long companyId = securityService.getLoggedInUser().getCompany().getId();
         List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllInvoiceProductByCompanyIdAndInvoiceType
