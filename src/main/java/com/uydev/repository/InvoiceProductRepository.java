@@ -21,4 +21,6 @@ public interface InvoiceProductRepository extends JpaRepository<InvoiceProduct, 
             "AND ip.invoice.invoiceType = :invoiceType ")
 List<InvoiceProduct> getTotalProfitLossByMonthForCompany(int year,int month,Long companyId,InvoiceType invoiceType);
 
+    List<InvoiceProduct> getInvoiceProductByProduct_IdOrderByInsertDateTimeAsc(Long productId);
+
 }

@@ -83,7 +83,13 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).orElseThrow(() -> new RuntimeException("there is no invoice product with id " + id));
         invoiceProduct.setIsDeleted(true);
         invoiceProductRepository.save(invoiceProduct);
+    }
 
-
+    @Override
+    public List<InvoiceProductDTO> getAllPurchaseInvoiceProductsByProductId(Long productId) {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.getInvoiceProductByProduct_IdOrderByInsertDateTimeAsc(productId);
+        return invoiceProducts.stream()
+                .map(ip->mapperUtil.convert(ip,new InvoiceProductDTO()))
+                .toList();
     }
 }

@@ -34,4 +34,8 @@ public interface InvoiceService {
     List<ClientVendorDTO> getAllClients();
 
     InvoiceDTO saveSalesInvoice(InvoiceDTO invoiceDTO);
+
+    void approvePurchase(Long invoiceId);
+
+    void approveSales(Long invoiceId);
 }

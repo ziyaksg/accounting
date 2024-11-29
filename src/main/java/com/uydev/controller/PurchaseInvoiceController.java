@@ -92,5 +92,12 @@ public class PurchaseInvoiceController {
         return "/invoice/invoice_print";
     }
 
+    @GetMapping("/approve/{invoiceId}")
+    public String approveInvoice(@PathVariable Long invoiceId){
+
+        invoiceService.approvePurchase(invoiceId);
+        return "redirect:/purchaseInvoices/list";
+    }
+
 
 }
