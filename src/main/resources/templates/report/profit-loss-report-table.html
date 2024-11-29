@@ -46,10 +46,11 @@
                                                             </tr>
                                                             </thead>
                                                             <tbody>
-                                                            <tr th:each="entry, comStat : ${monthlyProfitLossDataMap}">
+<!--                                                            <tr th:each="entry, comStat : ${monthlyProfitLossDataMap}">-->
+                                                            <tr th:each="profitLoss, comStat : ${monthlyProfitLossData}">
                                                                 <td th:text="${comStat.count}"></td>
-                                                                <td th:text="${entry.key}"></td>
-                                                                <td th:text="${entry.value}"></td>
+                                                                <td th:text="${profitLoss.month}"></td>
+                                                                <td th:text="${profitLoss.value} +' '+ ${profitLoss.getCurrency().getSymbol()}"></td>
                                                             </tr>
                                                             </tbody>
                                                         </table>

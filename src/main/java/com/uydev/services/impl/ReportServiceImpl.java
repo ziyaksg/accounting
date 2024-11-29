@@ -1,6 +1,8 @@
 package com.uydev.services.impl;
 
 import com.uydev.dto.CompanyDTO;
+import com.uydev.dto.ProfitLoss;
+import com.uydev.enums.Currency;
 import com.uydev.enums.InvoiceType;
 import com.uydev.services.InvoiceProductService;
 import com.uydev.services.ReportService;
@@ -62,6 +64,23 @@ endDate =endDate.minusMonths(1);
 
         return mapKey;
 
+
+    }
+
+    @Override
+    public List<ProfitLoss> monthlyProfitLossData() {
+        CompanyDTO loggedInCompany = securityService.getLoggedInUser().getCompany();
+        LocalDate startingDate= loggedInCompany.getInsertDateTime().toLocalDate();
+        List<LocalDate> mapKey= mapKeyGenerator(startingDate);
+
+        List<ProfitLoss> monthlyProfitLoss = new ArrayList<>();
+        for (LocalDate date : mapKey) {
+            BigDecimal profitLoss = invoiceProductService.getProfitLossByMonth(date.getYear(),date.getMonthValue(),loggedInCompany.getId(), InvoiceType.SALES);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy MMMM");
+            String key = date.format(formatter);
+            monthlyProfitLoss.add(new ProfitLoss(key,profitLoss, Currency.USD));
+        }
+        return monthlyProfitLoss;
 
     }
 }
