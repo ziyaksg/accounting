@@ -23,4 +23,7 @@ List<InvoiceProduct> getTotalProfitLossByMonthForCompany(int year,int month,Long
 
     List<InvoiceProduct> getInvoiceProductByProduct_IdOrderByInsertDateTimeAsc(Long productId);
 
+    boolean existsByInvoice_IdAndIsDeleted(Long id, boolean isDeleted);
+
+    List<InvoiceProduct> findAllByInvoice_IdAndIsDeleted(Long id, boolean isDeleted);
 }

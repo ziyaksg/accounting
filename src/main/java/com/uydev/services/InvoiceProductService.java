@@ -19,4 +19,8 @@ public interface InvoiceProductService {
     BigDecimal getProfitLossByMonth(int year, int monthValue, Long id, InvoiceType invoiceType);
 
     List<InvoiceProductDTO> getAllPurchaseInvoiceProductsByProductId(Long id);
+
+    boolean hasInvoiceProduct(Long invoiceId);
+
+    BigDecimal calculateTotal(Long id);
 }

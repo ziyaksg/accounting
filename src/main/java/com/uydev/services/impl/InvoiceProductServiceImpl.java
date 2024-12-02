@@ -92,4 +92,17 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
                 .map(ip->mapperUtil.convert(ip,new InvoiceProductDTO()))
                 .toList();
     }
+
+    @Override
+    public boolean hasInvoiceProduct(Long invoiceId) {
+       return invoiceProductRepository.existsByInvoice_IdAndIsDeleted(invoiceId,false);
+    }
+
+    @Override
+    public BigDecimal calculateTotal(Long invoiceId) {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoice_IdAndIsDeleted(invoiceId,false);
+       return invoiceProducts.stream()
+                .map(ip-> ip.getPrice().multiply(BigDecimal.valueOf(ip.getQuantity())))
+                .reduce(BigDecimal.ZERO,BigDecimal::add);
+    }
 }

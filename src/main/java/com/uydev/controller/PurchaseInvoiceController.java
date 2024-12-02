@@ -23,7 +23,6 @@ public class PurchaseInvoiceController {
 
         model.addAttribute("invoices", invoiceService.getAllPurchaseInvoice());
 
-
         return "/invoice/purchase-invoice-list";
     }
 

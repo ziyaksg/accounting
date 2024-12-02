@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,7 +38,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         Long companyId = securityService.getLoggedInUser().getCompany().getId();
         return invoiceRepository.findAllByCompanyIdAndInvoiceTypeAndIsDeleted
                         (companyId, invoiceType, false).stream()
-                .map(invoice -> mapperUtil.convert(invoice, new InvoiceDTO())).collect(Collectors.toList());
+                .map(invoice -> {
+                            InvoiceDTO invoiceDTO = mapperUtil.convert(invoice, new InvoiceDTO());
+                            invoiceDTO.setTotal(invoiceProductService.calculateTotal(invoice.getId()));
+                            invoiceDTO.setHasInvoiceProduct(invoiceProductService.hasInvoiceProduct(invoice.getId()));
+                            return invoiceDTO;
+                        }
+                ).collect(Collectors.toList());
     }
 
     @Override
@@ -193,18 +200,20 @@ public class InvoiceServiceImpl implements InvoiceService {
         // change status
         Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(RuntimeException::new);
         invoice.setInvoiceStatus(InvoiceStatus.APPROVED);
+        invoice.setDate(LocalDate.now());
         invoiceRepository.save(invoice);
 
         // increase product stock and invoiceProduct remaining quantity,
         List<InvoiceProductDTO> invoiceProductList = invoiceProductService.getAllPurchaseInvoiceProducts(invoiceId);
         for (InvoiceProductDTO ip :invoiceProductList){
-            ProductDTO product = ip.getProduct();
+            ProductDTO product = productService.findById(ip.getProduct().getId());
             product.setQuantityInStock(product.getQuantityInStock() + ip.getQuantity());
             productService.save(product);
 
             //set invoiceProduct remaining quantity
 
             ip.setRemainingQuantity(ip.getQuantity());
+            ip.setProfitLoss(BigDecimal.ZERO);
             invoiceProductService.save(ip);
 
 
@@ -217,39 +226,45 @@ public class InvoiceServiceImpl implements InvoiceService {
         // change status
         Invoice invoice = invoiceRepository.findById(invoiceId).orElseThrow(RuntimeException::new);
         invoice.setInvoiceStatus(InvoiceStatus.APPROVED);
+        invoice.setDate(LocalDate.now());
         invoiceRepository.save(invoice);
 
         // decrease product stock and invoiceProduct remaining quantity,
         List<InvoiceProductDTO> invoiceProductList = invoiceProductService.getAllSalesInvoiceProducts(invoiceId);
         for (InvoiceProductDTO ip :invoiceProductList){
             // decrease product stock
-            ProductDTO product = ip.getProduct();
+            ProductDTO product = productService.findById(ip.getProduct().getId());
             product.setQuantityInStock(product.getQuantityInStock() - ip.getQuantity());
             productService.save(product);
+            ip.setRemainingQuantity(ip.getQuantity());
+            ip.setProfitLoss(BigDecimal.ZERO);
+            invoiceProductService.save(ip);
 
             // invoiceProduct remaining quantity
             List<InvoiceProductDTO> invoiceProducts = invoiceProductService.getAllPurchaseInvoiceProductsByProductId(product.getId());
 
             for (InvoiceProductDTO pip :invoiceProducts){
-                if (ip.getRemainingQuantity()>=pip.getRemainingQuantity()){   // apple 15 purchase  950
-                                                                    // apple 15 purchase  1200
-                                                                    // apple 5 sales  1000
+                if (ip.getRemainingQuantity()>=pip.getRemainingQuantity()){   // apple 2 purchase  950
+                                                                    // apple 5 purchase  1200
+                    int quantity = pip.getRemainingQuantity();                                                // apple 6 sales  1000
                     pip.setRemainingQuantity(0);
                     invoiceProductService.save(pip);
                     // calculate profit
                     BigDecimal profitPrice = ip.getPrice().subtract(pip.getPrice()); //50
-                    BigDecimal profit = profitPrice.multiply(BigDecimal.valueOf(pip.getRemainingQuantity())); // 750
+                    BigDecimal profit = profitPrice.multiply(BigDecimal.valueOf(quantity)); // 100
                     ip.setProfitLoss(ip.getProfitLoss().add(profit));
-                    ip.setRemainingQuantity(ip.getRemainingQuantity()-pip.getRemainingQuantity());  // 5
+                    ip.setRemainingQuantity(ip.getRemainingQuantity()-quantity);  // 4
                     invoiceProductService.save(ip);
                 }
                 else {
-                    pip.setRemainingQuantity(pip.getRemainingQuantity()- ip.getRemainingQuantity()); // 10
+                    int quantity = ip.getRemainingQuantity(); // 4
+                    pip.setRemainingQuantity(pip.getRemainingQuantity()- ip.getRemainingQuantity()); // 1
                     invoiceProductService.save(pip);
                     // calculate profit
                     BigDecimal profitPrice = ip.getPrice().subtract(pip.getPrice()); // -200
-                    BigDecimal profit = profitPrice.multiply(BigDecimal.valueOf(ip.getRemainingQuantity())); // -1000
-                    ip.setProfitLoss(ip.getProfitLoss().add(profit));
+                    BigDecimal profit = profitPrice.multiply(BigDecimal.valueOf(quantity)); // -800
+                    ip.setProfitLoss(ip.getProfitLoss().add(profit)); // -700
+                    ip.setRemainingQuantity(0);
                     invoiceProductService.save(ip);
                 }
                 }
