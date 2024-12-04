@@ -38,4 +38,6 @@ public interface InvoiceService {
     void approvePurchase(Long invoiceId);
 
     void approveSales(Long invoiceId);
+
+    List<InvoiceDTO> getLastThreeInvoice();
 }

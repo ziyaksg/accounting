@@ -23,4 +23,8 @@ public interface InvoiceProductService {
     boolean hasInvoiceProduct(Long invoiceId);
 
     BigDecimal calculateTotal(Long id);
+
+    List<InvoiceProductDTO>  getAllSalesInvoiceProductsByProductId(Long productId);
+
+    List<InvoiceProductDTO> getAllInvoiceProducts();
 }

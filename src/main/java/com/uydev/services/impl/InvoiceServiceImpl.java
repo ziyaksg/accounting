@@ -7,6 +7,7 @@ import com.uydev.enums.InvoiceType;
 import com.uydev.mapper.MapperUtil;
 import com.uydev.repository.InvoiceRepository;
 import com.uydev.services.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
@@ -272,5 +273,13 @@ public class InvoiceServiceImpl implements InvoiceService {
                 break;
             }
         }
+    }
+
+    @Override
+    public List<InvoiceDTO> getLastThreeInvoice() {
+        List<Invoice> invoices =  invoiceRepository.findTop3ByCompany_IdAndIsDeletedOrderByLastUpdateDateTimeDesc(securityService.getLoggedInUser().getCompany().getId(), false);
+        return invoices.stream()
+                .map(inv->mapperUtil.convert(inv, new InvoiceDTO()))
+                .toList();
     }
 }

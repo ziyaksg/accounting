@@ -10,4 +10,6 @@ import java.util.Map;
 public interface ReportService {
    List<Map.Entry<String, BigDecimal>> monthlyProfitLossDataMap();
    List<ProfitLoss> monthlyProfitLossData();
+
+   List<Map.Entry<String, BigDecimal>> getProductProfitLoss();
 }

@@ -87,7 +87,16 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
 
     @Override
     public List<InvoiceProductDTO> getAllPurchaseInvoiceProductsByProductId(Long productId) {
-        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.getInvoiceProductByProduct_IdOrderByInsertDateTimeAsc(productId);
+        return  getAllInvoiceProductsByProductIdAndInvoiceType(productId, InvoiceType.PURCHASE);
+    }
+
+    @Override
+    public List<InvoiceProductDTO> getAllSalesInvoiceProductsByProductId(Long productId) {
+        return  getAllInvoiceProductsByProductIdAndInvoiceType(productId, InvoiceType.SALES);
+    }
+
+    private List<InvoiceProductDTO> getAllInvoiceProductsByProductIdAndInvoiceType(Long productId, InvoiceType invoiceType){
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.getInvoiceProductByProduct_IdAndInvoice_InvoiceTypeOrderByInsertDateTimeAsc(productId,invoiceType);
         return invoiceProducts.stream()
                 .map(ip->mapperUtil.convert(ip,new InvoiceProductDTO()))
                 .toList();
@@ -101,8 +110,17 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
     @Override
     public BigDecimal calculateTotal(Long invoiceId) {
         List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoice_IdAndIsDeleted(invoiceId,false);
-       return invoiceProducts.stream()
+        return invoiceProducts.stream()
                 .map(ip-> ip.getPrice().multiply(BigDecimal.valueOf(ip.getQuantity())))
                 .reduce(BigDecimal.ZERO,BigDecimal::add);
+    }
+
+    @Override
+    public List<InvoiceProductDTO> getAllInvoiceProducts() {
+        Long companyId = securityService.getLoggedInUser().getCompany().getId();
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findInvoiceProductByInvoice_Company_IdAndIsDeleted(companyId,false);
+        return invoiceProducts.stream()
+                .map(ip->mapperUtil.convert(ip,new InvoiceProductDTO()))
+                .toList();
     }
 }

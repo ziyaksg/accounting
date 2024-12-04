@@ -26,16 +26,6 @@ public class InvoiceProduct extends BaseEntity {
 
     private int remainingQuantity;
 
-/*
-  apple Iphone16     15  purchase  950
-  apple Iphone16     15  purchase  1050
-
-  apple Iphone16     20  sales  1000
-
-
-
- */
-
 
     @ManyToOne
     @JoinColumn(name = "invoice_id")

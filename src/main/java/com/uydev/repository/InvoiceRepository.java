@@ -14,4 +14,7 @@ public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
             (Long companyId, InvoiceType invoiceType, boolean isDeleted);
 
     Integer countAllByCompanyIdAndInvoiceType(Long companyId, InvoiceType invoiceType);
+
+
+    List<Invoice> findTop3ByCompany_IdAndIsDeletedOrderByLastUpdateDateTimeDesc(Long id, boolean b);
 }

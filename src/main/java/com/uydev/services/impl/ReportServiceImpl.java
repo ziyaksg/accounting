@@ -1,10 +1,13 @@
 package com.uydev.services.impl;
 
 import com.uydev.dto.CompanyDTO;
+import com.uydev.dto.InvoiceProductDTO;
+import com.uydev.dto.ProductDTO;
 import com.uydev.dto.ProfitLoss;
 import com.uydev.enums.Currency;
 import com.uydev.enums.InvoiceType;
 import com.uydev.services.InvoiceProductService;
+import com.uydev.services.ProductService;
 import com.uydev.services.ReportService;
 import com.uydev.services.SecurityService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +18,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,9 +27,8 @@ import java.util.Map;
 public class ReportServiceImpl implements ReportService {
 
     private final SecurityService securityService;
-    private final InvoiceServiceImpl invoiceServiceImpl;
     private final InvoiceProductService invoiceProductService;
-
+    private final ProductService productService;
 
 
     @Override
@@ -82,5 +85,23 @@ endDate =endDate.minusMonths(1);
         }
         return monthlyProfitLoss;
 
+    }
+
+    @Override
+    public List<Map.Entry<String, BigDecimal>> getProductProfitLoss() {
+        List<ProductDTO> products = productService.getAllProducts();
+        List<Map.Entry<String,BigDecimal>> productProfitLoss = new ArrayList<>();
+        for (ProductDTO product : products) {
+            BigDecimal profitLoss = getProductProfitLossByProductId(product.getId());
+            productProfitLoss.add(Map.entry(product.getName(),profitLoss));
+        }
+        return productProfitLoss;
+    }
+
+    private BigDecimal getProductProfitLossByProductId(Long productId) {
+        List<InvoiceProductDTO> invoiceProducts = invoiceProductService.getAllSalesInvoiceProductsByProductId(productId);
+        return  invoiceProducts.stream()
+                .map(InvoiceProductDTO::getProfitLoss)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
