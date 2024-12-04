@@ -23,7 +23,6 @@ public class PurchaseInvoiceController {
 
         model.addAttribute("invoices", invoiceService.getAllPurchaseInvoice());
 
-
         return "/invoice/purchase-invoice-list";
     }
 
@@ -90,6 +89,13 @@ public class PurchaseInvoiceController {
         model.addAttribute("invoiceProducts", invoiceProductService.getAllPurchaseInvoiceProducts(id));
 
         return "/invoice/invoice_print";
+    }
+
+    @GetMapping("/approve/{invoiceId}")
+    public String approveInvoice(@PathVariable Long invoiceId){
+
+        invoiceService.approvePurchase(invoiceId);
+        return "redirect:/purchaseInvoices/list";
     }
 
 

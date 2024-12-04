@@ -83,7 +83,44 @@ public class InvoiceProductServiceImpl implements InvoiceProductService {
         InvoiceProduct invoiceProduct = invoiceProductRepository.findById(id).orElseThrow(() -> new RuntimeException("there is no invoice product with id " + id));
         invoiceProduct.setIsDeleted(true);
         invoiceProductRepository.save(invoiceProduct);
+    }
 
+    @Override
+    public List<InvoiceProductDTO> getAllPurchaseInvoiceProductsByProductId(Long productId) {
+        return  getAllInvoiceProductsByProductIdAndInvoiceType(productId, InvoiceType.PURCHASE);
+    }
 
+    @Override
+    public List<InvoiceProductDTO> getAllSalesInvoiceProductsByProductId(Long productId) {
+        return  getAllInvoiceProductsByProductIdAndInvoiceType(productId, InvoiceType.SALES);
+    }
+
+    private List<InvoiceProductDTO> getAllInvoiceProductsByProductIdAndInvoiceType(Long productId, InvoiceType invoiceType){
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.getInvoiceProductByProduct_IdAndInvoice_InvoiceTypeOrderByInsertDateTimeAsc(productId,invoiceType);
+        return invoiceProducts.stream()
+                .map(ip->mapperUtil.convert(ip,new InvoiceProductDTO()))
+                .toList();
+    }
+
+    @Override
+    public boolean hasInvoiceProduct(Long invoiceId) {
+       return invoiceProductRepository.existsByInvoice_IdAndIsDeleted(invoiceId,false);
+    }
+
+    @Override
+    public BigDecimal calculateTotal(Long invoiceId) {
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findAllByInvoice_IdAndIsDeleted(invoiceId,false);
+        return invoiceProducts.stream()
+                .map(ip-> ip.getPrice().multiply(BigDecimal.valueOf(ip.getQuantity())))
+                .reduce(BigDecimal.ZERO,BigDecimal::add);
+    }
+
+    @Override
+    public List<InvoiceProductDTO> getAllInvoiceProducts() {
+        Long companyId = securityService.getLoggedInUser().getCompany().getId();
+        List<InvoiceProduct> invoiceProducts = invoiceProductRepository.findInvoiceProductByInvoice_Company_IdAndIsDeleted(companyId,false);
+        return invoiceProducts.stream()
+                .map(ip->mapperUtil.convert(ip,new InvoiceProductDTO()))
+                .toList();
     }
 }

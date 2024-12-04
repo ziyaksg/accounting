@@ -26,6 +26,7 @@ public class InvoiceProduct extends BaseEntity {
 
     private int remainingQuantity;
 
+
     @ManyToOne
     @JoinColumn(name = "invoice_id")
     private Invoice invoice;
