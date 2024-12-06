@@ -57,8 +57,8 @@ public class DashboardServiceImpl implements DashboardService {
     }
 
     @Override
-    public ExchangeResponseDTO getCurrencies() {
-     return    currencyClient.getCurrencies();
+    public Map<String, BigDecimal> getCurrencies() {
+     return  currencyClient.getCurrencies().getData();
 
     }
 }

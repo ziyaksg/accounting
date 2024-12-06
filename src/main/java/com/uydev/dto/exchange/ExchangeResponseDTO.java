@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 
@@ -13,10 +12,5 @@ import java.util.Map;
 @Setter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ExchangeResponseDTO {
-
-    //The JSON file was saying that we needed to add these objects
-
-    private List<Currencies> data;
-
-
+    private Map<String, BigDecimal> data;
 }

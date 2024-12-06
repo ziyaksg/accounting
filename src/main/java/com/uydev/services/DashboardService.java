@@ -8,5 +8,5 @@ import java.util.Map;
 public interface DashboardService{
     Map<String, BigDecimal> getSummaryNumbers();
 
-    ExchangeResponseDTO getCurrencies();
+    Map<String, BigDecimal> getCurrencies();
 }

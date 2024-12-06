@@ -27,3 +27,7 @@ spring:
   output:
     ansi:
       enabled: ALWAYS
+
+
+currency:
+  apikey: fca_live_YtVoMWDWUkuwlAG1UhUyq8hfRFdWGfklBUs9g3UZ
