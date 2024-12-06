@@ -1,7 +1,9 @@
 package com.uydev.services.impl;
 
+import com.uydev.clients.CurrencyClient;
 import com.uydev.dto.InvoiceDTO;
 import com.uydev.dto.InvoiceProductDTO;
+import com.uydev.dto.exchange.ExchangeResponseDTO;
 import com.uydev.entity.Invoice;
 import com.uydev.services.DashboardService;
 import com.uydev.services.InvoiceProductService;
@@ -21,6 +23,7 @@ public class DashboardServiceImpl implements DashboardService {
     private final SecurityService securityService;
     private final InvoiceService invoiceService;
     private final InvoiceProductService invoiceProductService;
+    private final CurrencyClient currencyClient;
     @Override
     public Map<String, BigDecimal> getSummaryNumbers() {
         BigDecimal totalSales = BigDecimal.ZERO;
@@ -51,5 +54,11 @@ public class DashboardServiceImpl implements DashboardService {
         summaryNumbers.put("totalCost",totalCost);
 
         return  summaryNumbers;
+    }
+
+    @Override
+    public ExchangeResponseDTO getCurrencies() {
+     return    currencyClient.getCurrencies();
+
     }
 }

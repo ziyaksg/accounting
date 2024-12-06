@@ -7,10 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestClient;
 
 @SpringBootApplication
-public class AcountingApplication {
+public class AccountingApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AcountingApplication.class, args);
+        SpringApplication.run(AccountingApplication.class, args);
     }
 
     @Bean
@@ -19,7 +19,7 @@ public class AcountingApplication {
     }
 
     @Bean
-    public RestClient getRestClient(){
+    public RestClient getRestClient() {
         return RestClient.create();
     }
 

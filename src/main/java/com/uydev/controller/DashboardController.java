@@ -19,6 +19,8 @@ public class DashboardController {
     public String getDashboard(Model model){
         model.addAttribute("summaryNumbers", dashboardService.getSummaryNumbers());
         model.addAttribute("invoices", invoiceService.getLastThreeInvoice());
+        model.addAttribute("exchangeRates",dashboardService.getCurrencies());
         return "dashboard";
     }
+
 }
